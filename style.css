@@ -1,0 +1,34 @@
+li {
+  display: block;
+  width: 100px;
+  height: 25px;
+  border: 1px solid black;
+}
+
+.red {
+  background: red;
+}
+
+.green {
+  background: green;
+}
+
+.blue {
+  background: blue;
+}
+
+.red.green {
+  background: orange;
+}
+
+.red.blue {
+  background: violet;
+}
+
+.blue.green {
+  background: yellow;
+}
+
+.red.green.blue {
+  background: white;
+}
