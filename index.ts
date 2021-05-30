@@ -42,7 +42,7 @@ const enumFlags = getEnumFlags(SignalFlags);
 
 const htmlArary: HTMLLIElement[] = generateHtmlArray(enumFlags);
 
-const source = from([1, 2, 3, 4, 5, 6, 7]).pipe(concatMap(val => of(val).pipe(delay(500))));
+const source = from([7, 6, 5, 4, 3, 2, 1]).pipe(concatMap(val => of(val).pipe(delay(500))));
 
 const root = document.getElementById('root');
 
