@@ -14,6 +14,8 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
       const commonFlag = currentFlag | flag;
 
       const el = document.createElement('li');
+      const innerEl = document.createElement('div');
+      el.appendChild(innerEl);
       const descEl = document.createElement('span');
       el.appendChild(descEl);
 
@@ -21,9 +23,7 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
         if ((commonFlag & f) != 0) {
           const signalTextualValue = SignalFlags[f];
           descEl.innerHTML += signalTextualValue + ' ';
-          const innerEl = document.createElement('div');
           innerEl.classList.add(signalTextualValue);
-          el.appendChild(innerEl);
         }
       });
 
