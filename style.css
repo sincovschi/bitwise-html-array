@@ -32,6 +32,7 @@ li > div {
   display: block;
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   opacity: 0;
   animation: beam 3s infinite;
 }
@@ -46,31 +47,12 @@ li > div:nth-child(3) {
 
 .red {
   background: red;
-  border-radius: 50%;
 }
 
 .green {
   background: green;
-  border: 3px solid black;
 }
 
 .blue {
   background: blue;
-  box-shadow: 0 5px 5px 0 black;
-}
-
-.red.green {
-  background: orange;
-}
-
-.red.blue {
-  background: violet;
-}
-
-.blue.green {
-  background: yellow;
-}
-
-.red.green.blue {
-  background: whitesmoke;
 }
