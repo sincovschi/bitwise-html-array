@@ -14,10 +14,16 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
       const commonFlag = currentFlag | flag;
 
       const el = document.createElement('li');
+      const descEl = document.createElement('span');
+      el.appendChild(descEl);
 
       enumFlags.forEach(f => {
         if ((commonFlag & f) != 0) {
-          el.classList.add(SignalFlags[f]);
+          const signalTextualValue = SignalFlags[f];
+          descEl.innerHTML += signalTextualValue + ' ';
+          const innerEl = document.createElement('div');
+          innerEl.classList.add(signalTextualValue);
+          el.appendChild(innerEl);
         }
       });
 
@@ -40,6 +46,15 @@ const source = from([1, 2, 3, 4, 5, 6, 7]).pipe(concatMap(val => of(val).pipe(de
 
 const root = document.getElementById('root');
 
-source.subscribe(flag => {
+const addHtmlFlagToRoot = (flag: SignalFlags) => {
   root.appendChild(htmlArary[flag]?.cloneNode(true));
-});
+}
+
+source.subscribe(addHtmlFlagToRoot);
+
+document.getElementById('fillpage').onclick = () => {
+  for (let i = 0; i < 1000; i++) {
+    const randormFlag = Math.floor(Math.random() * (7) + 1);
+    addHtmlFlagToRoot(randormFlag);
+  }
+}
