@@ -46,15 +46,15 @@ const source = from([7, 6, 5, 4, 3, 2, 1]).pipe(concatMap(val => of(val).pipe(de
 
 const root = document.getElementById('root');
 
-const addHtmlFlagToRoot = (flag: SignalFlags) => {
+source.subscribe((flag: SignalFlags) => {
   root.appendChild(htmlArary[flag]?.cloneNode(true));
-}
-
-source.subscribe(addHtmlFlagToRoot);
+});
 
 document.getElementById('fillpage').onclick = () => {
+  const fragment = document.createDocumentFragment();
   for (let i = 0; i < 1000; i++) {
     const randormFlag = Math.floor(Math.random() * (7) + 1);
-    addHtmlFlagToRoot(randormFlag);
+    fragment.appendChild(htmlArary[randormFlag]?.cloneNode(true));
   }
+  root.appendChild(fragment);
 }
