@@ -23,27 +23,25 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
   const htmlArary: HTMLLIElement[] = [];
 
   function recursiveFlagCombination(
-    flag: SignalFlags,
+    startFlag: SignalFlags,
     restEnumFlags: SignalFlags[]
   ) {
-    for (let i = 0; i < restEnumFlags.length; i++) {
+    restEnumFlags.forEach((flag, i) => {
       const { el, setElFlag } = useCreateLIElement();
+      const combinedFlag = flag | startFlag;
 
-      const currentFlag = restEnumFlags[i];
-      const lastFlag = currentFlag | flag;
-
-      let commonFlag = lastFlag;
-      while (commonFlag != 0) {
-        const lowestFlag = commonFlag & (~commonFlag + 1);
-        const signalTextualValue = SignalFlags[lowestFlag];
-        setElFlag(signalTextualValue);
-        commonFlag = commonFlag ^ lowestFlag;
+      let tempFlag = combinedFlag;
+      while (tempFlag != 0) {
+        const lowestFlag = tempFlag & (~tempFlag + 1);
+        const flagTextualValue = SignalFlags[lowestFlag];
+        setElFlag(flagTextualValue);
+        tempFlag ^= lowestFlag; // XOR removes lowestFlag
       }
 
-      htmlArary[lastFlag] = el;
+      htmlArary[combinedFlag] = el;
 
-      recursiveFlagCombination(lastFlag, restEnumFlags.slice(i + 1));
-    }
+      recursiveFlagCombination(combinedFlag, restEnumFlags.slice(i + 1));
+    });
   }
 
   recursiveFlagCombination(0, enumFlags);
