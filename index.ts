@@ -30,11 +30,14 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
       const { el, setElFlag } = useCreateLIElement();
       const combinedFlag = flag | startFlag;
 
-      for (let tempFlag = combinedFlag; tempFlag != 0; tempFlag) {
-        const lowestFlag = tempFlag & (~tempFlag + 1);
+      for (
+        let tempFlag = combinedFlag, lowestFlag = 0;
+        tempFlag != 0;
+        tempFlag ^= lowestFlag // XOR removes lowestFlag
+      ) {
+        lowestFlag = tempFlag & (~tempFlag + 1);
         const flagTextualValue = SignalFlags[lowestFlag];
         setElFlag(flagTextualValue);
-        tempFlag ^= lowestFlag; // XOR removes lowestFlag
       }
 
       htmlArary[combinedFlag] = el;
