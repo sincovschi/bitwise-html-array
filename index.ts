@@ -5,7 +5,7 @@ import { getEnumFlags } from './helpers';
 
 import './style';
 
-function useLIElement() {
+function useCreateLIElement() {
   const el = document.createElement('li');
   const innerEl = document.createElement('div');
   el.appendChild(innerEl);
@@ -27,7 +27,7 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
     restEnumFlags: SignalFlags[]
   ) {
     for (let i = 0; i < restEnumFlags.length; i++) {
-      const { el, setElFlag } = useLIElement();
+      const { el, setElFlag } = useCreateLIElement();
 
       const currentFlag = restEnumFlags[i];
       const lastFlag = currentFlag | flag;
@@ -47,7 +47,7 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
   }
 
   recursiveFlagCombination(0, enumFlags);
-  
+
   return htmlArary;
 }
 
