@@ -8,33 +8,34 @@ import './style';
 function generateHtmlArray(enumFlags: SignalFlags[]) {
   const htmlArary: HTMLLIElement[] = [];
 
-  var f = function(flag: SignalFlags, restEnumFlags: SignalFlags[]) {
-    for (var i = 0; i < restEnumFlags.length; i++) {
-      const currentFlag = restEnumFlags[i];
-      const commonFlag = currentFlag | flag;
-
+  function recursion(flag: SignalFlags, restEnumFlags: SignalFlags[]) {
+    for (let i = 0; i < restEnumFlags.length; i++) {
       const el = document.createElement('li');
       const innerEl = document.createElement('div');
       el.appendChild(innerEl);
       const descEl = document.createElement('span');
       el.appendChild(descEl);
 
-      enumFlags.forEach(f => {
-        if ((commonFlag & f) != 0) {
-          const signalTextualValue = SignalFlags[f];
-          descEl.innerHTML += signalTextualValue + ' ';
-          innerEl.classList.add(signalTextualValue);
-        }
-      });
+      const currentFlag = restEnumFlags[i];
+      const lastFlag = currentFlag | flag;
 
-      htmlArary[commonFlag] = el;
+      let commonFlag = lastFlag;
+      while (commonFlag != 0) {
+        const lowestFlag = commonFlag & (~commonFlag + 1);
+        const signalTextualValue = SignalFlags[lowestFlag];
+        descEl.innerHTML += signalTextualValue + ' ';
+        innerEl.classList.add(signalTextualValue);
+        commonFlag = commonFlag ^ lowestFlag;
+      }
 
-      f(commonFlag, restEnumFlags.slice(i + 1));
+      htmlArary[lastFlag] = el;
+
+      recursion(lastFlag, restEnumFlags.slice(i + 1));
     }
-  };
+  }
 
-  f(0, enumFlags);
-
+  recursion(0, enumFlags);
+  console.log(htmlArary);
   return htmlArary;
 }
 
@@ -42,7 +43,9 @@ const enumFlags = getEnumFlags(SignalFlags);
 
 const htmlArary: HTMLLIElement[] = generateHtmlArray(enumFlags);
 
-const source = from([7, 6, 5, 4, 3, 2, 1]).pipe(concatMap(val => of(val).pipe(delay(500))));
+const source = from([7, 6, 5, 4, 3, 2, 1]).pipe(
+  concatMap((val) => of(val).pipe(delay(500)))
+);
 
 const root = document.getElementById('root');
 
@@ -53,8 +56,8 @@ source.subscribe((flag: SignalFlags) => {
 document.getElementById('fillpage').onclick = () => {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < 1000; i++) {
-    const randormFlag = Math.floor(Math.random() * (7) + 1);
+    const randormFlag = Math.floor(Math.random() * 7 + 1);
     fragment.appendChild(htmlArary[randormFlag]?.cloneNode(true));
   }
   root.appendChild(fragment);
-}
+};
