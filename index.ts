@@ -5,16 +5,29 @@ import { getEnumFlags } from './helpers';
 
 import './style';
 
+function useLIElement() {
+  const el = document.createElement('li');
+  const innerEl = document.createElement('div');
+  el.appendChild(innerEl);
+  const descEl = document.createElement('span');
+  el.appendChild(descEl);
+
+  function setElFlag(text) {
+    descEl.textContent += text + ' ';
+    innerEl.classList.add(text);
+  }
+  return { el, setElFlag };
+}
+
 function generateHtmlArray(enumFlags: SignalFlags[]) {
   const htmlArary: HTMLLIElement[] = [];
 
-  function recursion(flag: SignalFlags, restEnumFlags: SignalFlags[]) {
+  function recursiveFlagCombination(
+    flag: SignalFlags,
+    restEnumFlags: SignalFlags[]
+  ) {
     for (let i = 0; i < restEnumFlags.length; i++) {
-      const el = document.createElement('li');
-      const innerEl = document.createElement('div');
-      el.appendChild(innerEl);
-      const descEl = document.createElement('span');
-      el.appendChild(descEl);
+      const { el, setElFlag } = useLIElement();
 
       const currentFlag = restEnumFlags[i];
       const lastFlag = currentFlag | flag;
@@ -23,19 +36,18 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
       while (commonFlag != 0) {
         const lowestFlag = commonFlag & (~commonFlag + 1);
         const signalTextualValue = SignalFlags[lowestFlag];
-        descEl.innerHTML += signalTextualValue + ' ';
-        innerEl.classList.add(signalTextualValue);
+        setElFlag(signalTextualValue);
         commonFlag = commonFlag ^ lowestFlag;
       }
 
       htmlArary[lastFlag] = el;
 
-      recursion(lastFlag, restEnumFlags.slice(i + 1));
+      recursiveFlagCombination(lastFlag, restEnumFlags.slice(i + 1));
     }
   }
 
-  recursion(0, enumFlags);
-  console.log(htmlArary);
+  recursiveFlagCombination(0, enumFlags);
+  
   return htmlArary;
 }
 
