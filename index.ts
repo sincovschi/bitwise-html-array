@@ -26,7 +26,7 @@ function generateHtmlArray(enumFlags: SignalFlags[]) {
     startFlag: SignalFlags,
     restEnumFlags: SignalFlags[]
   ) {
-    restEnumFlags.forEach(flag => {
+    restEnumFlags.forEach((flag, i) => {
       const { el, setElFlag } = useCreateLIElement();
       const combinedFlag = flag | startFlag;
 
